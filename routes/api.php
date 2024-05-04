@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiAuthController;
 use App\Http\Controllers\CatigoryController;
 use App\Http\Controllers\CoursController;
+use App\Http\Controllers\MavzuController;
+use App\Http\Controllers\CommentController;
 
 // Register
 Route::post('/register', [ApiAuthController::class,'register']);
@@ -22,6 +24,12 @@ Route::group(['middleware' => ['auth:sanctum']],function(){
 
     Route::post('/cours/create', [CoursController::class,'store']);
     Route::put('/cours/update/{id}', [CoursController::class,'update']);
+    
+    Route::post('/mavzu/create', [MavzuController::class,'store']);
+    Route::put('/mavzu/update/{id}', [MavzuController::class,'update']);
+    
+    Route::post('/comment/create', [CommentController::class,'store']);
+    Route::delete('/comment/delete/{id}', [CommentController::class,'destroy']);
 
     Route::get('/student', [ApiAuthController::class,'student']);
     Route::get('/admin', [ApiAuthController::class,'admin']);

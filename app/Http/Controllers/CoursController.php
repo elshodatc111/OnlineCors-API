@@ -6,7 +6,9 @@ use App\Models\Cours;
 use App\Models\User;
 use App\Models\Rool;
 use App\Models\Photo;
+use App\Models\Mavzu;
 use App\Models\Catigory;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -34,9 +36,11 @@ class CoursController extends Controller{
                     'users.last_name as techer_family',
                     'photos.image as techer_image')
                 ->get();
+                $Catigory = Catigory::get();
             return response()->json([
                 'status'=>true,
                 'cours'=>$Cours,
+                'catigory'=>$Catigory,
                 'messege'=>'Barcha kurslar'
             ], 200);
         }catch(\Throwable $th){
@@ -138,10 +142,17 @@ class CoursController extends Controller{
                     'users.last_name as techer_family',
                     'photos.image as techer_image')
                 ->first();
+            $Mavzu = Mavzu::where('cours_id',$id)->get();
+            $Comment = Comment::where('comments.cours_id',$id)
+                ->join('users','comments.user_id','=','users.id')
+                ->join('photos','comments.user_id','=','photos.type_id')
+                ->select('comments.comment','comments.created_at','users.first_name','users.last_name','photos.image')
+                ->get();
             return response()->json([
                 'status'=>true,
                 'cours'=>$Cours,
-                'mavzu'=>null,
+                'mavzu'=>$Mavzu,
+                'comment'=>$Comment,
                 'messege'=>'Cours Haqida'
             ],200);
         }catch(\Throwable $th){
